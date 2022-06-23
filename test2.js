@@ -15,9 +15,9 @@ const puppeteer = require("puppeteer");
     await page.click(`[type="submit"]`);
     await page.waitForNavigation();
     await page.click(`div`); // this is because facebook leaves some black overlay if you log in with my chromium; it may not be the same for yours
-    await page.waitFor(5000);
+    await page.waitForTimeout(5000);
     await page.goto("https://www.facebook.com/profile.php?id=100018619276178");
-    await page.waitFor(3000);
+    await page.waitForTimeout(3000);
     await page.click("div");
     await page.waitForSelector(`#mount_0_0_kj > div > div:nth-child(1) > div > div.rq0escxv.l9j0dhe7.du4w35lb > div > div > div.j83agx80.cbu4d94t.d6urw2fd.dp1hu0rb.l9j0dhe7.du4w35lb > div.j83agx80.cbu4d94t.dp1hu0rb > div > div > div.bp9cbjyn.j83agx80.cbu4d94t.d2edcug0 > div.rq0escxv.d2edcug0.ecyo15nh.k387qaup.r24q5c3a.hv4rvrfc.dati1w0a.tr9rh885 > div > div.rq0escxv.l9j0dhe7.du4w35lb.hpfvmrgz.g5gj957u.aov4n071.oi9244e8.bi6gxh9e.h676nmdw.aghb5jc5.gile2uim.pwa15fzy.fhuww2h9 > div:nth-child(1) > div > div > div > div > div.k4urcfbm.buofh1pr.j83agx80.ll8tlv6m > div`);
     await page.click(`#mount_0_0_kj > div > div:nth-child(1) > div > div.rq0escxv.l9j0dhe7.du4w35lb > div > div > div.j83agx80.cbu4d94t.d6urw2fd.dp1hu0rb.l9j0dhe7.du4w35lb > div.j83agx80.cbu4d94t.dp1hu0rb > div > div > div.bp9cbjyn.j83agx80.cbu4d94t.d2edcug0 > div.rq0escxv.d2edcug0.ecyo15nh.k387qaup.r24q5c3a.hv4rvrfc.dati1w0a.tr9rh885 > div > div.rq0escxv.l9j0dhe7.du4w35lb.hpfvmrgz.g5gj957u.aov4n071.oi9244e8.bi6gxh9e.h676nmdw.aghb5jc5.gile2uim.pwa15fzy.fhuww2h9 > div:nth-child(1) > div > div > div > div > div.k4urcfbm.buofh1pr.j83agx80.ll8tlv6m > div`);
