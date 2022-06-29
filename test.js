@@ -7,12 +7,17 @@ async function start() {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto("https://learnwebcode.github.io/practice-requests/");
+  var names = await page.$$(".info strong");
+  for (const ele of names) {
+   var t = await page.evaluate((el) => ele.textContent, t);
+    console.log("=======++>", t);
+  }
+   // const names   // const names = await page.evaluate(() => {
+  //   return Array.from(document.querySelectorAll(".info strong")).map((x) => x.textContent);
+  // });= await page.evaluate(() => {
+  //   return Array.from(document.querySelectorAll(".info strong")).map((x) => x.textContent);
+  // });
 
-  const names = await page.evaluate(() => {
-    return Array.from(document.querySelectorAll(".info strong")).map((x) => x.textContent);
-  });
-
-  console.log("=======++>", names)
   
   // await fs.writeFile("names.txt", names.join("\r\n"));
 

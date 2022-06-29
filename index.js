@@ -1,6 +1,10 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs/promises");
 
+
+const cookies = require("./cookies.json");
+const config = require("./config.json");
+
 //login with facebook account 
 const login = async () => {
     const browser = await puppeteer.launch({
@@ -11,38 +15,59 @@ const login = async () => {
     const page = await browser.newPage();
   try {
     await page.setDefaultNavigationTimeout(1000000);
-    await page.goto("https://www.facebook.com/", { waitUntil: "load", timeout: 0 });
-    // setTimeout(async () => {
-    await page.waitForSelector("#email");
-    //   await page.waitForSelector("#pass");
-    //   await page.waitForSelector('input[type="submit"]');
-    await page.type("#email", "mohammedlyamani@gmail.com");
-    await page.type("#pass", "kyleface3808");
 
-    // get value input email and password
-    const email = await page.$eval("#email", (el) => el.value);
-    const password = await page.$eval("#pass", (el) => el.value);
-    console.log(email);
-    console.log(password);
-    // await page.click('#u_0_d_ed');
-    await page.click('button[name="login"]');
-    await page.waitForNavigation();
-    console.log(" login1 =======================================> ");
-    await page.click(`div`);
-    await page.waitForTimeout(3000);
+    if (Object.keys(cookies).length) {
+      await page.setCookie(...cookies);
+      await page.goto("https://www.facebook.com", { waitUntil: "load", timeout: 0 });
+       const url = await page.url();
+    }
+    else if (!Object.keys(cookies).length) {
+        await page.goto("https://www.facebook.com/login", { waitUntil: "networkidle2" });
+        await page.type("#email", config.username, { delay: 30 });
+        await page.type("#pass", config.password, { delay: 30 });
+        const email = await page.$eval("#email", (el) => el.value);
+        const password = await page.$eval("#pass", (el) => el.value);
+        console.log(email);
+        console.log(password);
+       await page.click('button[name="login"]');
+       await page.waitForNavigation({ waitUntil: "networkidle0" });
+       await page.waitForTimeout(15000);
+       let currentCookies = await page.cookies();
+       fs.writeFileSync("./cookies.json", JSON.stringify(currentCookies));
+      }
+
+    // await page.goto("https://www.facebook.com/", { waitUntil: "load", timeout: 0 });
+    // // setTimeout(async () => {
+    // await page.waitForSelector("#email");
+    // //   await page.waitForSelector("#pass");
+    // //   await page.waitForSelector('input[type="submit"]');
+    // await page.type("#email", "mohammedlyamani@gmail.com");
+    // await page.type("#pass", "kyleface3808");
+
+    // // get value input email and password
+    // const email = await page.$eval("#email", (el) => el.value);
+    // const password = await page.$eval("#pass", (el) => el.value);
+    // console.log(email);
+    // console.log(password);
+    // // await page.click('#u_0_d_ed');
+    // await page.click('button[name="login"]');
+    // await page.waitForNavigation();
+    // console.log(" login1 =======================================> ");
+    // await page.click(`div`);
+    // await page.waitForTimeout(3000);
+
     await page.goto("https://www.facebook.com/marketplace/create/vehicle", { waitUntil: "load", timeout: 0 });
     await page.waitForTimeout(3000);
 
-     await page.evaluate(() => {
+    await page.evaluate(() => {
       var r = document.querySelector('[aria-label="Vehicle type"]');
-      r.click()
-     });
-    
+      r.click();
+    });
+
     // await page.click('[aria-label="Vehicle type"]');
 
     const names = await page.evaluate(() => {
       return Array.from(document.querySelectorAll('[role="menuitemradio"] span, [role="option"] span')).map((x) => x.textContent);
-
     });
 
     /*  const inner_html = await page.evaluate(() => document.querySelectorAll('[role="menuitemradio"] span, [role="option"] span'));
@@ -54,15 +79,15 @@ const login = async () => {
 
     console.log("marketplace=======================================>", names);
 
-     await page.evaluate(() => {
+    await page.evaluate(() => {
       var t = document.querySelectorAll('[role="menuitemradio"] span, [role="option"] span')[7].click();
-     });
+    });
 
-        await page.waitForSelector("input[type=file]");
+    await page.waitForSelector("input[type=file]");
     const input = await page.$("input[type=file]");
-      for (let index = 0; index < 5; index++) {
-        await input.uploadFile(`./img_${index+1}.png`);
-      }
+    for (let index = 0; index < 5; index++) {
+      await input.uploadFile(`./img_${index + 1}.png`);
+    }
 
     // const locations = await page.evaluate(() => {
     //   return Array.from(document.querySelectorAll('[role="listbox"]>li span')).map((x) => x.textContent);
